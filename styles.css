@@ -181,10 +181,12 @@ footer {
 }
 
 .cursor{
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
 
-    background: cyan;
+    border: 2px solid cyan;
+    background: rgba(0,255,255,0.15);
+
     border-radius: 50%;
 
     position: fixed;
@@ -192,16 +194,22 @@ footer {
     left: 0;
 
     pointer-events: none;
-    cursor: none;
 
     z-index: 999999;
 
     transform: translate(-50%, -50%);
 
+    backdrop-filter: blur(4px);
+
+    transition:
+      transform 0.15s ease,
+      width 0.2s ease,
+      height 0.2s ease,
+      backgorund 0.2s ease;
+
     box-shadow:
-      0 0 10px cyan,
-      0 0 20px cyan,
-      0 0 40px cyan;
+      0 0 10px rgba(0,255,255,0.7),
+      0 0 25px rgba(0,255,255,0.5);
 }
 
 .cursor.click{
