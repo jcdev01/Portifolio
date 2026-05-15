@@ -1,0 +1,40 @@
+<svg width="100%" viewBox="0 0 680 680" role="img" xmlns="http://www.w3.org/2000/svg" style="">
+  <title style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">Java icon fiel ao original</title>
+  <desc style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">Xícara Java estilo outline com vapor, cores roxo e azul, fundo transparente</desc>
+  <defs>
+    <linearGradient id="vaporG" x1="0%" y1="100%" x2="30%" y2="0%">
+      <stop offset="0%" style="stop-color:#5b4fcf"/>
+      <stop offset="60%" style="stop-color:#9b5de5"/>
+      <stop offset="100%" style="stop-color:#c084fc"/>
+    </linearGradient>
+    <linearGradient id="cupG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c6ee6"/>
+      <stop offset="100%" style="stop-color:#4a3bbd"/>
+    </linearGradient>
+  </defs>
+
+  <!-- VAPOR - 3 fios sinuosos como na imagem: curvam para esquerda depois direita -->
+  <!-- Vapor esquerdo -->
+  <path d="M305 228 Q288 205 300 183 Q315 160 300 137 Q284 113 300 88" fill="none" stroke="url(#vaporG)" stroke-width="9" stroke-linecap="round" style="fill:none;color:rgb(255, 255, 255);stroke-width:9px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <!-- Vapor centro (mais alto e mais espesso) -->
+  <path d="M340 235 Q320 208 335 182 Q352 155 335 128 Q318 100 338 72" fill="none" stroke="url(#vaporG)" stroke-width="11" stroke-linecap="round" style="fill:none;color:rgb(255, 255, 255);stroke-width:11px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <!-- Vapor direito -->
+  <path d="M375 228 Q392 205 380 183 Q365 160 380 137 Q396 113 380 88" fill="none" stroke="url(#vaporG)" stroke-width="9" stroke-linecap="round" style="fill:none;color:rgb(255, 255, 255);stroke-width:9px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- XÍCARA - corpo com bordas arredondadas, outline estilo da imagem -->
+  <!-- Borda superior (rim) - elipse achatada -->
+  <ellipse cx="340" cy="280" rx="105" ry="14" fill="none" stroke="url(#cupG)" stroke-width="11" style="fill:none;color:rgb(255, 255, 255);stroke-width:11px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Corpo da xícara: lados curvos levemente, afinando para baixo -->
+  <path d="M235 280 Q228 370 242 415 Q258 460 340 465 Q422 460 438 415 Q452 370 445 280" fill="none" stroke="url(#cupG)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" style="fill:none;color:rgb(255, 255, 255);stroke-width:11px;stroke-linecap:round;stroke-linejoin:round;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Alça direita: semicírculo simples como na logo Java -->
+  <path d="M445 318 Q490 318 490 368 Q490 418 445 418" fill="none" stroke="url(#cupG)" stroke-width="11" stroke-linecap="round" style="fill:none;color:rgb(255, 255, 255);stroke-width:11px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- PIRES: elipse achatada larga embaixo da xícara -->
+  <ellipse cx="340" cy="488" rx="140" ry="16" fill="none" stroke="url(#cupG)" stroke-width="10" style="fill:none;color:rgb(255, 255, 255);stroke-width:10px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Segunda elipse do pires (borda inferior) como na imagem original -->
+  <ellipse cx="340" cy="502" rx="110" ry="11" fill="none" stroke="url(#cupG)" stroke-width="7" opacity="0.7" style="fill:none;color:rgb(255, 255, 255);stroke-width:7px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.7;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+</svg>
