@@ -109,3 +109,31 @@ document.addEventListener("mouseup", () => {
     cursor.classList.remove("click");
 });
 
+const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+if (!isMobile) {
+  const cursor = document.querySelector(".cursor");
+
+  document.addEventListener("mousemove", (e) => {
+    cursor.style.left = e.clientX + "px";
+    cursor.style.top = e.clientY + "px";
+  });
+
+  document.addEventListener("mousedown", () => {
+    cursor.classList.add("click");
+  });
+
+  document.addEventListener("mouseup", () => {
+    cursor.classList.remove("click");
+  });
+}
+
+if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    document.addEventListener("mousemove", (e) => {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+    });
+
+    document.addEventListener("mousedown", () => cursor.classList.add("click"));
+    document.addEventListener("mouseup", () => cursor.classList.remove("click"));
+}

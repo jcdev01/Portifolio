@@ -371,3 +371,15 @@ footer {
     --line:#00f0ff;
 }
 
+@media (hover: none) and (pointer: coarse) {
+    .cursor {
+        display: none !important;
+    }
+
+    body, *,
+    *::before,
+    *::after {
+        cursor: auto !important;
+    }
+}
+
