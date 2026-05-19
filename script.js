@@ -45,7 +45,7 @@ const projects = [
     description: " Aplicação WEB de Biblioteca Virtual com autenticação local, Busca de livros via API Open Library",
     language: "Html,css e js",
     icon: "📘",
-    repo: "https://github.com/jcdev01/menu-terminal",
+    repo: "https://github.com/HandreyGama/boraler",
     demo:"https://boraler.vercel.app"
   },
   {
@@ -60,7 +60,7 @@ const projects = [
     description: "PixelNet é uma rede social simulada no estilo anos 2000 , construída com HTML, CSS e JavaScript puro. O projeto consome a JSONPlaceholder API",
     language: "Html,css e js",
     icon: "🌐",
-    repo: "https://github.com/jcdev01/jairocosta-analise-de-lista",
+    repo: "https://github.com/vitao-al/VibeNet",
     demo: "https://vibe-net-rho.vercel.app/"
   },
 ];
