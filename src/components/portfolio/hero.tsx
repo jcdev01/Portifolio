@@ -24,8 +24,8 @@ export function Hero() {
             <TextType
               as="span"
               text="Olá, eu sou"
-              typingSpeed={45}
-              initialDelay={200}
+              typingSpeed={40}
+              initialDelay={100}
               loop={false}
               showCursor={false}
             />
@@ -42,8 +42,8 @@ export function Hero() {
             as="h1"
             text="Jairo Costa"
             className="mt-4 text-[2.6rem] leading-[1.05] font-bold sm:text-6xl lg:text-[4.1rem]"
-            typingSpeed={70}
-            initialDelay={900}
+            typingSpeed={60}
+            initialDelay={500}
             loop={false}
             showCursor
             cursorCharacter="|"
@@ -65,8 +65,8 @@ export function Hero() {
             as="p"
             text="Transformo regras de negócio e ideias em aplicações organizadas, seguras e escaláveis, utilizando Java, Spring Boot, bancos de dados e boas práticas de desenvolvimento."
             className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg"
-            typingSpeed={18}
-            initialDelay={2400}
+            typingSpeed={12}
+            initialDelay={0}
             loop={false}
             showCursor={false}
           />
