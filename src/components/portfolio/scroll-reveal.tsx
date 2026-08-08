@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 interface ScrollRevealProps {
   text: string;
@@ -24,9 +25,22 @@ export function ScrollReveal({
   wordAnimationEnd = "bottom bottom-=15%",
 }: ScrollRevealProps) {
   const containerRef = useRef<HTMLParagraphElement>(null);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(max-width: 768px)").matches;
+  });
 
   const words = useMemo(() => text.split(" "), [text]);
   const highlightSet = useMemo(() => new Set(highlightWords), [highlightWords]);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mql.matches);
+
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -37,12 +51,15 @@ export function ScrollReveal({
     const ctx = gsap.context(() => {
       gsap.fromTo(
         wordElements,
-        { opacity: baseOpacity, filter: `blur(${blurStrength}px)` },
+        {
+          opacity: baseOpacity,
+          filter: isMobile ? "none" : `blur(${blurStrength}px)`,
+        },
         {
           opacity: 1,
-          filter: "blur(0px)",
+          filter: isMobile ? "none" : "blur(0px)",
           ease: "none",
-          stagger: 0.05,
+          stagger: isMobile ? 0.02 : 0.05,
           scrollTrigger: {
             trigger: el,
             start: "top bottom-=10%",
@@ -54,7 +71,7 @@ export function ScrollReveal({
     }, el);
 
     return () => ctx.revert();
-  }, [baseOpacity, blurStrength, wordAnimationEnd]);
+  }, [baseOpacity, blurStrength, wordAnimationEnd, isMobile]);
 
   return (
     <p ref={containerRef} className={className}>
