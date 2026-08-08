@@ -3,13 +3,7 @@
 import { ElementType, useEffect, useRef, useState, createElement, useMemo, useCallback } from 'react';
 import { gsap } from 'gsap';
 
-interface TextTypeProps {
-  className?: string;
-  showCursor?: boolean;
-  hideCursorWhileTyping?: boolean;
-  cursorCharacter?: string | React.ReactNode;
-  cursorBlinkDuration?: number;
-  cursorClassName?: string;
+type TextTypeProps = {
   text: string | string[];
   as?: ElementType;
   typingSpeed?: number;
@@ -17,12 +11,21 @@ interface TextTypeProps {
   pauseDuration?: number;
   deletingSpeed?: number;
   loop?: boolean;
+  className?: string;
+  showCursor?: boolean;
+  hideCursorWhileTyping?: boolean;
+  cursorCharacter?: string;
+  cursorClassName?: string;
+  cursorBlinkDuration?: number;
   textColors?: string[];
-  variableSpeed?: { min: number; max: number };
+  variableSpeed?: {
+    min: number;
+    max: number;
+  };
   onSentenceComplete?: (sentence: string, index: number) => void;
   startOnVisible?: boolean;
   reverseMode?: boolean;
-}
+};
 
 const TextType = ({
   text,
@@ -45,6 +48,7 @@ const TextType = ({
   reverseMode = false,
   ...props
 }: TextTypeProps & React.HTMLAttributes<HTMLElement>) => {
+  const [isMobile, setIsMobile] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -54,6 +58,16 @@ const TextType = ({
   const containerRef = useRef<HTMLElement>(null);
 
   const textArray = useMemo(() => (Array.isArray(text) ? text : [text]), [text]);
+
+  // detecta mobile uma vez, no mount
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 768px)');
+    setIsMobile(mql.matches);
+
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
 
   const getRandomSpeed = useCallback(() => {
     if (!variableSpeed) return typingSpeed;
@@ -67,7 +81,7 @@ const TextType = ({
   };
 
   useEffect(() => {
-    if (!startOnVisible || !containerRef.current) return;
+    if (!startOnVisible || !containerRef.current || isMobile) return;
 
     const observer = new IntersectionObserver(
       entries => {
@@ -82,23 +96,22 @@ const TextType = ({
 
     observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, [startOnVisible]);
+  }, [startOnVisible, isMobile]);
 
   useEffect(() => {
-    if (showCursor && cursorRef.current) {
-      gsap.set(cursorRef.current, { opacity: 1 });
-      gsap.to(cursorRef.current, {
-        opacity: 0,
-        duration: cursorBlinkDuration,
-        repeat: -1,
-        yoyo: true,
-        ease: 'power2.inOut'
-      });
-    }
-  }, [showCursor, cursorBlinkDuration]);
+    if (isMobile || !showCursor || !cursorRef.current) return;
+    gsap.set(cursorRef.current, { opacity: 1 });
+    gsap.to(cursorRef.current, {
+      opacity: 0,
+      duration: cursorBlinkDuration,
+      repeat: -1,
+      yoyo: true,
+      ease: 'power2.inOut'
+    });
+  }, [showCursor, cursorBlinkDuration, isMobile]);
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (isMobile || !isVisible) return;
 
     let timeout: ReturnType<typeof setTimeout>;
 
@@ -115,7 +128,6 @@ const TextType = ({
 
           if (onSentenceComplete) {
             onSentenceComplete(textArray[currentTextIndex] ?? '', currentTextIndex);
-
           }
 
           setCurrentTextIndex(prev => (prev + 1) % textArray.length);
@@ -165,11 +177,22 @@ const TextType = ({
     isVisible,
     reverseMode,
     variableSpeed,
-    onSentenceComplete
+    onSentenceComplete,
+    isMobile
   ]);
 
   const shouldHideCursor =
     hideCursorWhileTyping && (currentCharIndex < (textArray[currentTextIndex]?.length ?? 0) || isDeleting);
+
+  // MOBILE: renderiza o texto completo direto, sem animação
+  if (isMobile) {
+    const fullText = textArray[0] ?? '';
+    return createElement(
+      Component,
+      { ref: containerRef, className: `text-type ${className}`, ...props },
+      <span className="text-type__content">{fullText}</span>
+    );
+  }
 
   return createElement(
     Component,
