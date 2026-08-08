@@ -1,8 +1,6 @@
 import { ArrowDown, ArrowRight, Github, MapPin } from "lucide-react";
 import { GITHUB_URL } from "./data";
 import { ArchitectureDiagram } from "./architecture-diagram";
-import { ScrollReveal } from "./scroll-reveal";
-import TextType from "./text-type";
 
 export function Hero() {
   return (
@@ -11,6 +9,14 @@ export function Hero() {
       className="relative overflow-hidden pt-28 pb-20 md:pt-36 md:pb-28"
     >
       <div
+        className="grid-backdrop pointer-events-none absolute inset-0 -z-10"
+        aria-hidden
+      />
+      <div
+        className="noise-backdrop pointer-events-none absolute inset-0 -z-10"
+        aria-hidden
+      />
+      <div
         className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[36rem] w-[46rem] -translate-x-1/2 rounded-full opacity-25 blur-[120px]"
         style={{ background: "var(--gradient-brand)" }}
         aria-hidden
@@ -18,18 +24,9 @@ export function Hero() {
 
       <div className="section-shell grid items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
         <div>
-          <p className="reveal-in font-mono text-sm text-accent">
+          <p className="font-mono text-sm text-accent">
             <span aria-hidden>&gt; </span>
-
-            <TextType
-              as="span"
-              text="Olá, eu sou"
-              typingSpeed={40}
-              initialDelay={100}
-              loop={false}
-              showCursor={false}
-            />
-
+            Olá, eu sou
             <span
               className="animate-caret ml-1 inline-block text-primary"
               aria-hidden
@@ -38,46 +35,28 @@ export function Hero() {
             </span>
           </p>
 
-          <TextType
-            as="h1"
-            text="Jairo Costa"
-            className="mt-4 text-[2.6rem] leading-[1.05] font-bold sm:text-6xl lg:text-[4.1rem]"
-            typingSpeed={60}
-            initialDelay={500}
-            loop={false}
-            showCursor
-            cursorCharacter="|"
-            cursorClassName="text-primary"
-          />
+          <h1 className="mt-4 text-[2.6rem] leading-[1.05] font-bold sm:text-6xl lg:text-[4.1rem]">
+            Jairo Costa
+          </h1>
 
-          <ScrollReveal
-            text="Desenvolvedor Backend construindo APIs, sistemas e soluções digitais."
-            className="mt-5 max-w-xl font-display text-xl leading-snug text-foreground/90 sm:text-2xl"
-            highlightWords={[
-              "APIs,",
-              "sistemas",
-              "soluções",
-              "digitais.",
-            ]}
-          />
+          <p className="mt-5 max-w-xl font-display text-xl leading-snug text-foreground/90 sm:text-2xl">
+            Desenvolvedor Backend construindo{" "}
+            <span className="text-gradient">APIs, sistemas e soluções digitais.</span>
+          </p>
 
-          <TextType
-            as="p"
-            text="Transformo regras de negócio e ideias em aplicações organizadas, seguras e escaláveis, utilizando Java, Spring Boot, bancos de dados e boas práticas de desenvolvimento."
-            className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg"
-            typingSpeed={12}
-            initialDelay={0}
-            loop={false}
-            showCursor={false}
-          />
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            Transformo regras de negócio e ideias em aplicações organizadas,
+            seguras e escaláveis, utilizando Java, Spring Boot, bancos de dados
+            e boas práticas de desenvolvimento.
+          </p>
 
           <ul className="mt-7 flex flex-wrap items-center gap-2 font-mono text-xs text-muted-foreground">
-            {["Java", "Spring Boot", "APIs REST", "PostgreSQL"].map((tech) => (
+            {["Java", "Spring Boot", "APIs REST", "PostgreSQL"].map((t) => (
               <li
-                key={tech}
+                key={t}
                 className="rounded-full border border-border bg-surface px-3 py-1.5"
               >
-                {tech}
+                {t}
               </li>
             ))}
 
@@ -94,7 +73,6 @@ export function Hero() {
               style={{ background: "var(--gradient-brand)" }}
             >
               Ver projetos
-
               <ArrowRight
                 className="size-4 transition-transform group-hover:translate-x-0.5"
                 aria-hidden
