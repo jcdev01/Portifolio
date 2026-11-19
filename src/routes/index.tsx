@@ -6,13 +6,15 @@ import { Stack } from "@/components/portfolio/stack";
 import { Projects } from "@/components/portfolio/projects";
 import { Journey } from "@/components/portfolio/journey";
 import { Process } from "@/components/portfolio/process";
+import { Architecture3D } from "@/components/portfolio/architecture-3d";
 import { GitHubSection } from "@/components/portfolio/github-section";
 import { Contact } from "@/components/portfolio/contact";
 import { SiteFooter } from "@/components/portfolio/site-footer";
+import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/components/portfolio/data";
 
-const TITLE = "Jairo Costa | Desenvolvedor Backend Java e Spring Boot";
+const TITLE = "Jairo Costa — Desenvolvedor Backend Java e Spring Boot";
 const DESCRIPTION =
-  "Portfólio de Jairo Costa, desenvolvedor backend focado em Java, Spring Boot, APIs REST, bancos de dados e arquitetura de software.";
+  "Portfólio de Jairo Costa: projetos publicados no GitHub, estatísticas ao vivo, stack backend e formas de contato.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,15 +25,20 @@ export const Route = createFileRoute("/")({
       {
         name: "keywords",
         content:
-          "Jairo Costa, desenvolvedor backend, Java, Spring Boot, API REST, PostgreSQL, portfólio",
+          "Jairo Costa, desenvolvedor backend, Java, Spring Boot, API REST, PostgreSQL, GitHub, portfólio",
       },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "pt_BR" },
+      { property: "og:image", content: "/og-image.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Jairo Costa — Desenvolvedor Backend" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
+      { name: "twitter:image", content: "/og-image.png" },
     ],
     scripts: [
       {
@@ -48,8 +55,9 @@ export const Route = createFileRoute("/")({
             addressRegion: "AL",
             addressCountry: "BR",
           },
+          email: `mailto:${CONTACT_EMAIL}`,
           knowsAbout: ["Java", "Spring Boot", "APIs REST", "PostgreSQL", "Python", "Git"],
-          sameAs: ["https://github.com/jcdev01"],
+          sameAs: [GITHUB_URL, LINKEDIN_URL],
         }),
       },
     ],
@@ -62,7 +70,7 @@ function Portfolio() {
     <div className="min-h-screen bg-background">
       <a
         href="#inicio"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:text-sm"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-md focus:bg-foreground focus:px-4 focus:py-2 focus:text-sm focus:text-background"
       >
         Ir para o conteúdo
       </a>
@@ -74,6 +82,7 @@ function Portfolio() {
         <Projects />
         <Journey />
         <Process />
+        <Architecture3D />
         <GitHubSection />
         <Contact />
       </main>

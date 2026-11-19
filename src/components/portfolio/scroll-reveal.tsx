@@ -1,92 +1,65 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useMemo, useRef } from "react";
+import { gsap, reducedMotion } from "@/lib/motion";
 
-gsap.registerPlugin(ScrollTrigger);
-ScrollTrigger.config({ ignoreMobileResize: true });
-
-interface ScrollRevealProps {
+type ScrollRevealProps = {
   text: string;
   className?: string;
   highlightWords?: string[];
   highlightClassName?: string;
-  baseOpacity?: number;
-  blurStrength?: number;
-  wordAnimationEnd?: string;
-}
+};
 
 export function ScrollReveal({
   text,
   className = "",
   highlightWords = [],
-  highlightClassName = "text-gradient",
-  baseOpacity = 0.15,
-  blurStrength = 6,
-  wordAnimationEnd = "bottom bottom-=15%",
+  highlightClassName = "text-primary",
 }: ScrollRevealProps) {
-  const containerRef = useRef<HTMLParagraphElement>(null);
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia("(max-width: 768px)").matches;
-  });
-
+  const ref = useRef<HTMLParagraphElement>(null);
   const words = useMemo(() => text.split(" "), [text]);
-  const highlightSet = useMemo(() => new Set(highlightWords), [highlightWords]);
+  const highlights = useMemo(() => new Set(highlightWords), [highlightWords]);
 
   useEffect(() => {
-    const mql = window.matchMedia("(max-width: 768px)");
-    setIsMobile(mql.matches);
-
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mql.addEventListener("change", handler);
-    return () => mql.removeEventListener("change", handler);
-  }, []);
-
-  useEffect(() => {
-    const el = containerRef.current;
+    const el = ref.current;
     if (!el) return;
 
-    const wordElements = el.querySelectorAll<HTMLElement>(".reveal-word");
+    const targets = el.querySelectorAll<HTMLElement>(".reveal-word");
+
+    if (reducedMotion()) {
+      gsap.set(targets, { opacity: 1 });
+      return;
+    }
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        wordElements,
-        {
-          opacity: baseOpacity,
-          filter: isMobile ? "none" : `blur(${blurStrength}px)`,
-        },
+        targets,
+        { opacity: 0.2 },
         {
           opacity: 1,
-          filter: isMobile ? "none" : "blur(0px)",
           ease: "none",
-          stagger: isMobile ? 0.02 : 0.05,
+          stagger: 0.35,
           scrollTrigger: {
             trigger: el,
-            start: "top bottom-=10%",
-            end: wordAnimationEnd,
+            start: "top 88%",
+            end: "bottom 55%",
             scrub: true,
           },
-        }
+        },
       );
     }, el);
 
     return () => ctx.revert();
-  }, [baseOpacity, blurStrength, wordAnimationEnd, isMobile]);
+  }, [text]);
 
   return (
-    <p ref={containerRef} className={className}>
-      {words.map((word, i) => {
-        const cleanWord = word.replace(/[.,!?]/g, "");
-        const isHighlighted = highlightSet.has(cleanWord);
-        return (
-          <span
-            key={i}
-            className={`reveal-word inline-block ${isHighlighted ? highlightClassName : ""}`}
-          >
-            {word}&nbsp;
-          </span>
-        );
-      })}
+    <p ref={ref} className={className}>
+      {words.map((word, i) => (
+        <span
+          key={`${word}-${i}`}
+          className={`reveal-word inline-block ${highlights.has(word.replace(/[.,!?]/g, "")) ? highlightClassName : ""}`}
+        >
+          {word}&nbsp;
+        </span>
+      ))}
     </p>
   );
 }

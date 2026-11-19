@@ -1,226 +1,268 @@
-import { ArrowUpRight, Code2, Database, ExternalLink, Github, Monitor, Server } from "lucide-react";
-import { FEATURED_PROJECT, PROJECTS, type Project } from "./data";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowUpRight, Github, Star } from "lucide-react";
+import { useGitHubOverview } from "@/hooks/use-github";
+import { formatRepoDate, getDemoUrl, GITHUB_USER, type GitHubRepo } from "@/lib/github";
+import { gsap, reducedMotion } from "@/lib/motion";
 import { Reveal, SectionHeading } from "./primitives";
-import { ScrollReveal } from "./scroll-reveal";
 
-const KIND_ICON = {
-  api: Server,
-  desktop: Monitor,
-  web: Code2,
-  academico: Database,
-} as const;
+function RepoLinks({ repo, light = false }: { repo: GitHubRepo; light?: boolean }) {
+  const demo = getDemoUrl(repo);
+  const base = light
+    ? "border-white/25 text-white hover:border-white hover:bg-white hover:text-foreground"
+    : "border-border text-foreground/80 hover:border-primary hover:text-primary";
 
-/** Mockup abstrato gerado por código, coerente com o tipo de aplicação. */
-function ProjectMockup({ kind }: { kind: Project["kind"] }) {
   return (
-    <div
-      
-      className="relative h-36 overflow-hidden rounded-xl border border-border/70 bg-background/60"
-      aria-hidden
-    >
-      <div className="grid-backdrop absolute inset-0 opacity-70" />
-      {kind === "api" ? (
-        <div className="absolute inset-0 flex flex-col justify-center gap-2 p-4 font-mono text-[0.62rem]">
-          {["GET /api/status 200", "POST /api/auth/login 200", "GET /api/usuarios 200"].map((l) => (
-            <div key={l} className="flex items-center gap-2 text-muted-foreground">
-              <span className="size-1.5 rounded-full bg-accent" />
-              <span className="truncate">{l}</span>
-            </div>
-          ))}
-        </div>
-      ) : null}
-      {kind === "desktop" ? (
-        <div className="absolute inset-0 p-4">
-          <div className="flex h-full gap-2">
-            <div className="w-1/3 space-y-1.5 rounded-lg border border-border/70 bg-surface/70 p-2">
-              {[0, 1, 2, 3].map((n) => (
-                <div key={n} className="h-2 rounded bg-primary/25" />
-              ))}
-            </div>
-            <div className="flex-1 space-y-1.5 rounded-lg border border-border/70 bg-surface/50 p-2">
-              {[0, 1, 2, 3, 4].map((n) => (
-                <div key={n} className="h-2.5 rounded bg-muted" />
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : null}
-      {kind === "web" ? (
-        <div className="absolute inset-0 flex items-center justify-center gap-3 p-4">
-          <div className="w-24 space-y-2 rounded-lg border border-border/70 bg-surface/70 p-3">
-            <div className="h-2 rounded bg-muted" />
-            <div className="h-2 rounded bg-muted" />
-            <div className="h-2.5 rounded bg-primary/40" />
-          </div>
-          <svg viewBox="0 0 60 8" className="h-2 w-16 text-accent/70">
-            <line
-              x1="0"
-              y1="4"
-              x2="60"
-              y2="4"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeDasharray="5 5"
-              className="animate-dash-flow"
-            />
-          </svg>
-          <div className="flex size-12 items-center justify-center rounded-lg border border-border/70 bg-surface/70 font-mono text-[0.55rem] text-accent">
-            API
-          </div>
-        </div>
-      ) : null}
-      {kind === "academico" ? (
-        <div className="absolute inset-0 flex items-end gap-1.5 p-5">
-          {[38, 60, 28, 74, 50, 86, 44].map((h, i) => (
-            <div
-              key={i}
-              className="flex-1 rounded-t"
-              style={{ height: `${h}%`, background: "var(--gradient-brand)", opacity: 0.45 }}
-            />
-          ))}
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function TechTags({ tech }: { tech: string[] }) {
-  return (
-    <ul className="mt-4 flex flex-wrap gap-2">
-      {tech.map((t) => (
-        <li
-          key={t}
-          className="rounded-md border border-border bg-surface px-2.5 py-1 font-mono text-[0.65rem] text-muted-foreground"
-        >
-          {t}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function ProjectLinks({ project }: { project: Project }) {
-  return (
-    <div className="mt-6 flex flex-wrap items-center gap-2">
-      {project.repo ? (
+    <div className="mt-5 flex flex-wrap items-center gap-2">
+      <a
+        href={repo.html_url}
+        target="_blank"
+        rel="noreferrer noopener"
+        className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium transition-colors ${base}`}
+      >
+        <Github className="size-3.5" aria-hidden />
+        Código
+      </a>
+      {demo ? (
         <a
-          href={project.repo}
+          href={demo}
           target="_blank"
           rel="noreferrer noopener"
-          className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-3.5 py-2 text-xs font-medium transition-colors hover:border-primary/60"
+          className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium transition-colors ${base}`}
         >
-          <Github className="size-3.5" aria-hidden />
-          Ver código
-        </a>
-      ) : null}
-      {project.demo ? (
-        <a
-          href={project.demo}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="inline-flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/12 px-3.5 py-2 text-xs font-medium transition-colors hover:bg-primary/20"
-        >
-          <ExternalLink className="size-3.5" aria-hidden />
           Ver projeto
+          <ArrowUpRight className="size-3.5" aria-hidden />
         </a>
       ) : null}
-      {!project.repo && !project.demo ? (
-        <span className="font-mono text-[0.65rem] text-muted-foreground">
-          projeto acadêmico — sem repositório público
+      {repo.stargazers_count > 0 ? (
+        <span
+          className={`ml-1 inline-flex items-center gap-1 font-mono text-[0.68rem] ${light ? "text-white/60" : "text-muted-foreground"}`}
+        >
+          <Star className="size-3" aria-hidden />
+          {repo.stargazers_count}
         </span>
       ) : null}
     </div>
   );
 }
 
-export function Projects() {
-  const FeaturedIcon = KIND_ICON[FEATURED_PROJECT.kind];
+function FeaturedRepo({ repo }: { repo: GitHubRepo }) {
+  const demo = getDemoUrl(repo);
 
   return (
-    <section id="projetos" className="relative py-20 md:py-28">
+    <Reveal>
+      <article className="grid gap-10 border-y border-border py-12 md:grid-cols-[1fr_0.85fr] md:gap-16">
+        <div>
+          <p className="eyebrow">em destaque</p>
+          <h3 className="mt-5 font-display text-4xl leading-tight font-semibold sm:text-5xl">
+            {repo.name}
+          </h3>
+          <p className="mt-5 max-w-xl text-base leading-[1.8] text-muted-foreground">
+            {repo.description ?? "Projeto publicado no GitHub."}
+          </p>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            {repo.language ? (
+              <span className="rounded-full bg-surface-2 px-3 py-1.5 font-mono text-[0.68rem] text-foreground/75">
+                {repo.language}
+              </span>
+            ) : null}
+            {repo.topics.slice(0, 3).map((topic) => (
+              <span
+                key={topic}
+                className="rounded-full bg-surface-2 px-3 py-1.5 font-mono text-[0.68rem] text-foreground/75"
+              >
+                {topic}
+              </span>
+            ))}
+          </div>
+
+          <RepoLinks repo={repo} />
+        </div>
+
+        <div className="card flex min-h-56 flex-col justify-between overflow-hidden p-7">
+          <div className="flex items-start justify-between gap-4">
+            <span className="number-mark">repositório · {formatRepoDate(repo.pushed_at)}</span>
+            <ArrowUpRight className="size-4 text-primary" aria-hidden />
+          </div>
+          <div>
+            <p className="font-display text-2xl leading-tight font-semibold">
+              {demo ? "Aberto para visualizar." : "Código disponível."}
+            </p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Atualizado pela última vez em {formatRepoDate(repo.pushed_at)}.
+            </p>
+          </div>
+          <div className="mt-8 flex gap-6 border-t border-border pt-5 font-mono text-[0.68rem] text-muted-foreground">
+            <span>{repo.stargazers_count} stars</span>
+            <span>{repo.forks_count} forks</span>
+            <span>{(repo.size / 1024).toFixed(1)} MB</span>
+          </div>
+        </div>
+      </article>
+    </Reveal>
+  );
+}
+
+function RepoGrid({ repos }: { repos: GitHubRepo[] }) {
+  const grid = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = grid.current;
+    if (!el || reducedMotion()) return;
+
+    const cards = el.querySelectorAll("[data-repo-card]");
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        cards,
+        { autoAlpha: 0, y: 18 },
+        { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.045, ease: "power3.out" },
+      );
+    }, el);
+
+    return () => ctx.revert();
+  }, [repos]);
+
+  return (
+    <div ref={grid} className="mt-8 grid gap-x-8 md:grid-cols-2">
+      {repos.map((repo, i) => (
+        <a
+          data-repo-card
+          key={repo.id}
+          href={repo.html_url}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="group flex gap-5 border-t border-border py-7"
+        >
+          <span className="number-mark pt-1.5">{String(i + 1).padStart(2, "0")}</span>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-start justify-between gap-4">
+              <h3 className="font-display text-lg font-semibold break-words transition-colors group-hover:text-primary">
+                {repo.name}
+              </h3>
+              <ArrowUpRight
+                className="size-4 shrink-0 text-muted-foreground/50 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary"
+                aria-hidden
+              />
+            </div>
+            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+              {repo.description ?? "Repositório público com código-fonte disponível."}
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[0.65rem] text-muted-foreground">
+              {repo.language ? <span>{repo.language}</span> : null}
+              <span>{formatRepoDate(repo.pushed_at)}</span>
+              {repo.stargazers_count > 0 ? <span>{repo.stargazers_count} stars</span> : null}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  );
+}
+
+export function Projects() {
+  const { data, isLoading, isError } = useGitHubOverview();
+  const [filter, setFilter] = useState<string | null>(null);
+
+  const repos = data?.repos ?? [];
+  const languages = useMemo(
+    () => Array.from(new Set(repos.map((repo) => repo.language).filter(Boolean))) as string[],
+    [repos],
+  );
+
+  const featured = useMemo(() => {
+    const withDemo = repos.filter((repo) => getDemoUrl(repo));
+    return withDemo[0] ?? repos[0] ?? null;
+  }, [repos]);
+
+  const visible = useMemo(
+    () => repos.filter((repo) => repo.id !== featured?.id && (!filter || repo.language === filter)),
+    [repos, featured, filter],
+  );
+
+  return (
+    <section id="projetos" className="section-space border-t border-border">
       <div className="section-shell">
         <SectionHeading
+          index="04"
           eyebrow="projetos"
-          title="Projetos em destaque"
-          subtitle="Projetos desenvolvidos para aplicar conhecimentos em backend, desenvolvimento web, interfaces e arquitetura de software."
+          title="Tudo o que construí, em um só lugar."
+          subtitle="Projetos publicados no GitHub, ordenados por atividade. Use os filtros para navegar por linguagem."
         />
 
-        {/* Destaque principal */}
-        <Reveal className="mt-12">
-          <article className="panel glow-ring grid gap-8 p-6 md:p-9 lg:grid-cols-[1.05fr_1fr]">
-            <div>
-              <div className="flex items-center gap-3">
-                <span className="flex size-10 items-center justify-center rounded-xl border border-border bg-surface-2 text-accent">
-                  <FeaturedIcon className="size-5" aria-hidden />
-                </span>
-                <span className="font-mono text-[0.65rem] tracking-[0.2em] text-accent uppercase">
-                  projeto principal
-                </span>
-              </div>
-              <h3 className="mt-5 font-display text-2xl font-semibold sm:text-3xl">
-                {FEATURED_PROJECT.name}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
-                {FEATURED_PROJECT.description}
-              </p>
-              <ul className="mt-5 grid gap-2">
-                {FEATURED_PROJECT.highlights.map((h) => (
-                  <li key={h} className="flex items-start gap-2.5 text-sm text-foreground/85">
-                    <ArrowUpRight className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden />
-                    {h}
-                  </li>
-                ))}
-              </ul>
-              <TechTags tech={FEATURED_PROJECT.tech} />
-              <ProjectLinks project={FEATURED_PROJECT} />
-            </div>
-            <div className="flex items-center">
-              <div className="w-full space-y-3">
-                <ProjectMockup kind={FEATURED_PROJECT.kind} />
-                <div className="grid grid-cols-3 gap-3">
-                  {["Controller", "Service", "Repository"].map((layer) => (
-                    <div
-                      key={layer}
-                      className="rounded-lg border border-border/70 bg-surface/60 px-2 py-3 text-center font-mono text-[0.62rem] text-muted-foreground"
-                    >
-                      {layer}
-                    </div>
-                  ))}
+        {isLoading ? (
+          <div className="mt-12 space-y-5" aria-hidden>
+            {[0, 1, 2, 3].map((n) => (
+              <div key={n} className="flex gap-5 border-t border-border py-7">
+                <div className="h-3 w-6 animate-pulse rounded bg-surface-2" />
+                <div className="flex-1 space-y-3">
+                  <div className="h-5 w-40 animate-pulse rounded bg-surface-2" />
+                  <div className="h-3 w-full max-w-md animate-pulse rounded bg-surface-2" />
                 </div>
               </div>
-            </div>
-          </article>
-        </Reveal>
+            ))}
+          </div>
+        ) : null}
 
-        {/* Demais projetos — grade assimétrica */}
-        <div className="mt-6 grid gap-6 lg:grid-cols-12">
-          {PROJECTS.map((project, i) => {
-            const Icon = KIND_ICON[project.kind];
-            const span = i % 4 === 0 || i % 4 === 3 ? "lg:col-span-7" : "lg:col-span-5";
-            return (
-              <Reveal
-                as="article"
-                key={project.name}
-                delay={i * 70}
-                className={`panel group p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/45 ${span}`}
+        {isError || (!isLoading && !data) ? (
+          <div className="card mt-12 p-7">
+            <p className="text-sm text-muted-foreground">
+              Os projetos não puderam ser carregados do GitHub. Tente novamente em instantes ou
+              acesse diretamente o perfil.
+            </p>
+            <a
+              href={`https://github.com/${GITHUB_USER}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary"
+            >
+              Ir para o GitHub <ArrowUpRight className="size-4" aria-hidden />
+            </a>
+          </div>
+        ) : null}
+
+        {featured && !filter ? (
+          <div className="mt-12">
+            <FeaturedRepo repo={featured} />
+          </div>
+        ) : null}
+
+        {languages.length > 0 ? (
+          <div className="mt-14 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setFilter(null)}
+              className={`rounded-full border px-4 py-2 font-mono text-[0.68rem] transition-colors ${
+                filter === null
+                  ? "border-foreground bg-foreground text-background"
+                  : "border-border text-muted-foreground hover:border-primary hover:text-primary"
+              }`}
+            >
+              todos · {repos.length}
+            </button>
+            {languages.map((lang) => (
+              <button
+                key={lang}
+                type="button"
+                onClick={() => setFilter((current) => (current === lang ? null : lang))}
+                className={`rounded-full border px-4 py-2 font-mono text-[0.68rem] transition-colors ${
+                  filter === lang
+                    ? "border-foreground bg-foreground text-background"
+                    : "border-border text-muted-foreground hover:border-primary hover:text-primary"
+                }`}
               >
-                <ProjectMockup kind={project.kind} />
-                <div className="mt-5 flex items-center gap-2.5">
-                  <Icon className="size-4 text-accent" aria-hidden />
-                  <span className="font-mono text-[0.62rem] tracking-[0.18em] text-muted-foreground uppercase">
-                    {project.summary}
-                  </span>
-                </div>
-                <h3 className="mt-3 font-display text-xl font-semibold">{project.name}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {project.description}
-                </p>
-                <TechTags tech={project.tech} />
-                <ProjectLinks project={project} />
-              </Reveal>
-            );
-          })}
-        </div>
+                {lang}
+              </button>
+            ))}
+          </div>
+        ) : null}
+
+        {visible.length > 0 ? <RepoGrid repos={visible} /> : null}
+
+        {filter && visible.length === 0 ? (
+          <p className="mt-10 text-sm text-muted-foreground">
+            Nenhum projeto encontrado para {filter}.
+          </p>
+        ) : null}
       </div>
     </section>
   );

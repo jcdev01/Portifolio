@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Github, Menu, X } from "lucide-react";
-import { GITHUB_URL, NAV_ITEMS } from "./data";
+import { ArrowUpRight, Linkedin, Menu, X } from "lucide-react";
+import { GITHUB_URL, LINKEDIN_URL, NAV_ITEMS } from "./data";
 import { cn } from "@/lib/utils";
 
 export function SiteNav() {
@@ -16,56 +16,56 @@ export function SiteNav() {
   }, []);
 
   useEffect(() => {
-    const sections = NAV_ITEMS.map((i) => document.getElementById(i.id)).filter(
+    const sections = NAV_ITEMS.map((item) => document.getElementById(item.id)).filter(
       (el): el is HTMLElement => Boolean(el),
     );
     if (!sections.length || typeof IntersectionObserver === "undefined") return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
-          .filter((e) => e.isIntersecting)
+          .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
         if (visible) setActive(visible.target.id);
       },
       { rootMargin: "-45% 0px -50% 0px", threshold: [0, 0.2, 0.6] },
     );
-    sections.forEach((s) => observer.observe(s));
+
+    sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, []);
 
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled
-          ? "border-b border-border/70 bg-background/85 backdrop-blur-xl"
+        "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
+        scrolled || open
+          ? "border-b border-border bg-background/90 backdrop-blur-xl"
           : "border-b border-transparent",
       )}
     >
       <nav
         aria-label="Navegação principal"
-        className="section-shell flex h-16 items-center justify-between gap-4 md:h-20"
+        className="section-shell flex h-16 items-center justify-between gap-6 md:h-20"
       >
-        <a href="#inicio" className="group flex items-center gap-2.5">
-          <span className="glow-ring flex size-9 items-center justify-center rounded-lg bg-surface-2 font-mono text-sm font-bold text-accent">
-            jc
-          </span>
-          <span className="font-display text-sm font-semibold tracking-tight sm:text-base">
-            Jairo Costa
-          </span>
+        <a
+          href="#inicio"
+          className="flex items-baseline font-display text-lg font-bold tracking-tight"
+        >
+          jairo<span className="text-primary">.</span>
         </a>
 
-        <ul className="hidden items-center gap-1 lg:flex">
+        <ul className="hidden items-center gap-7 lg:flex">
           {NAV_ITEMS.map((item) => (
             <li key={item.id}>
               <a
                 href={`#${item.id}`}
                 aria-current={active === item.id ? "true" : undefined}
                 className={cn(
-                  "rounded-md px-3 py-2 text-sm transition-colors",
+                  "relative pb-1 text-sm transition-colors after:absolute after:right-0 after:bottom-0 after:left-0 after:h-px after:bg-primary after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100",
                   active === item.id
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground",
+                    ? "text-foreground after:scale-x-100"
+                    : "text-muted-foreground after:scale-x-0",
                 )}
               >
                 {item.label}
@@ -74,43 +74,50 @@ export function SiteNav() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-5">
           <a
             href={GITHUB_URL}
             target="_blank"
             rel="noreferrer noopener"
-            aria-label="Abrir perfil no GitHub"
-            className="flex size-9 items-center justify-center rounded-lg border border-border bg-surface text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+            className="hidden items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary sm:inline-flex"
           >
-            <Github className="size-4" aria-hidden />
+            GitHub <ArrowUpRight className="size-3" aria-hidden />
+          </a>
+          <a
+            href={LINKEDIN_URL}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="hidden items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary sm:inline-flex"
+          >
+            LinkedIn <Linkedin className="size-3" aria-hidden />
           </a>
           <a
             href="#contato"
-            className="hidden rounded-lg border border-primary/40 bg-primary/12 px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-primary hover:bg-primary/20 sm:inline-flex"
+            className="hidden items-center gap-1.5 text-sm font-medium transition-colors hover:text-primary md:inline-flex"
           >
-            Vamos conversar
+            Vamos conversar <ArrowUpRight className="size-3.5" aria-hidden />
           </a>
           <button
             type="button"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-label={open ? "Fechar menu" : "Abrir menu"}
-            className="flex size-9 items-center justify-center rounded-lg border border-border bg-surface lg:hidden"
+            className="flex size-9 items-center justify-center lg:hidden"
           >
-            {open ? <X className="size-4" aria-hidden /> : <Menu className="size-4" aria-hidden />}
+            {open ? <X className="size-5" aria-hidden /> : <Menu className="size-5" aria-hidden />}
           </button>
         </div>
       </nav>
 
       {open ? (
-        <div className="border-t border-border bg-background/95 backdrop-blur-xl lg:hidden">
-          <ul className="section-shell grid gap-1 py-4">
+        <div className="border-t border-border bg-background lg:hidden">
+          <ul className="section-shell grid gap-1 py-5">
             {NAV_ITEMS.map((item) => (
               <li key={item.id}>
                 <a
                   href={`#${item.id}`}
                   onClick={() => setOpen(false)}
-                  className="block rounded-lg px-3 py-3 text-sm text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
+                  className="block border-b border-border/70 py-3 text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   {item.label}
                 </a>
