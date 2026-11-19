@@ -3,12 +3,32 @@ import { Coffee, Container, Database, Layers3, Leaf, Workflow } from "lucide-rea
 import { gsap, reducedMotion } from "@/lib/motion";
 
 const FACES = [
-  { label: "JAVA", icon: Coffee, className: "[transform:translateZ(56px)]" },
-  { label: "SPRING", icon: Leaf, className: "[transform:rotateY(90deg)_translateZ(56px)]" },
-  { label: "JPA", icon: Layers3, className: "[transform:rotateY(180deg)_translateZ(56px)]" },
-  { label: "REST", icon: Workflow, className: "[transform:rotateY(-90deg)_translateZ(56px)]" },
-  { label: "DOCKER", icon: Container, className: "[transform:rotateX(90deg)_translateZ(56px)]" },
-  { label: "POSTGRES", icon: Database, className: "[transform:rotateX(-90deg)_translateZ(56px)]" },
+  { label: "JAVA", icon: Coffee, className: "[transform:translateZ(var(--cube-depth))]" },
+  {
+    label: "SPRING",
+    icon: Leaf,
+    className: "[transform:rotateY(90deg)_translateZ(var(--cube-depth))]",
+  },
+  {
+    label: "JPA",
+    icon: Layers3,
+    className: "[transform:rotateY(180deg)_translateZ(var(--cube-depth))]",
+  },
+  {
+    label: "REST",
+    icon: Workflow,
+    className: "[transform:rotateY(-90deg)_translateZ(var(--cube-depth))]",
+  },
+  {
+    label: "DOCKER",
+    icon: Container,
+    className: "[transform:rotateX(90deg)_translateZ(var(--cube-depth))]",
+  },
+  {
+    label: "POSTGRES",
+    icon: Database,
+    className: "[transform:rotateX(-90deg)_translateZ(var(--cube-depth))]",
+  },
 ] as const;
 
 type DragState = { id: number; x: number; y: number; rotateX: number; rotateY: number };
@@ -120,7 +140,7 @@ export function JavaCube() {
         onPointerMove={onPointerMove}
         onPointerUp={onPointerEnd}
         onPointerCancel={onPointerEnd}
-        className="relative ml-auto size-28 shrink-0 cursor-grab [touch-action:none] [perspective:600px] active:cursor-grabbing"
+        className="relative ml-auto size-24 shrink-0 cursor-grab [--cube-depth:48px] [touch-action:none] [perspective:600px] active:cursor-grabbing sm:size-28 sm:[--cube-depth:56px]"
       >
         <div
           ref={cube}
